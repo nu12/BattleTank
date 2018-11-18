@@ -9,11 +9,11 @@ void ATankPlayerController::BeginPlay() {
 	if (TankPawn) {
 		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController found Pawn: %s"), *(TankPawn->GetName()));
 	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("No Pawn found for TankPlayerController"));
+	}
 }
 
 ATank * ATankPlayerController::GetControlledTank() const {
 	return TankPawn;
 }
-
-
-
