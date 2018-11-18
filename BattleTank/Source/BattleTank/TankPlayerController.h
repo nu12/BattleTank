@@ -17,9 +17,12 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	
 
 protected:
-	virtual void BeginPlay() override;
+	void BeginPlay() override;
+	void Tick(float DeltaSeconds) override;
 	
 private:
-	ATank * GetControlledTank();
 	ATank* TankPawn = nullptr;
+
+	ATank * GetControlledTank();
+	void AimTowardsCrosshair();
 };
