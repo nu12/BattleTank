@@ -4,7 +4,7 @@
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
-	TankPawn = Cast<ATank>(GetPawn());
+	TankPawn = GetControlledTank();
 
 	if (TankPawn) {
 		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController found Pawn: %s"), *(TankPawn->GetName()));
@@ -14,6 +14,6 @@ void ATankPlayerController::BeginPlay() {
 	}
 }
 
-ATank * ATankPlayerController::GetControlledTank() const {
-	return TankPawn;
+ATank * ATankPlayerController::GetControlledTank() {
+	return Cast<ATank>(GetPawn());
 }

@@ -20,8 +20,9 @@ protected:
 
 private:
 	ATank * TankPawn = nullptr;
-	
+	ATank * PlayerTank = nullptr; // This will be the target
 
 	ATank * GetControlledTank();
+	ATank * GetPlayerTank();
 	
 };
