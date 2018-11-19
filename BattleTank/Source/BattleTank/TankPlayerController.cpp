@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
@@ -30,10 +31,10 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	FVector HitLocation;
 	
 	if (GetSightRayHitLocation(HitLocation)) {
-		// UE_LOG(LogTemp, Warning, TEXT("Ye Hit: %s"), *HitLocation.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitLocation.ToString());
 	}
 	else {
-		// UE_LOG(LogTemp, Warning, TEXT("No Hit"));
+		UE_LOG(LogTemp, Warning, TEXT("No Hit"));
 	}
 
 }
@@ -46,10 +47,26 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &OutHitLocation) cons
 	FVector WorldDirection;
 	/// De-project the screen position of the crosshair to a world location
 	if (GetLookDirection(ScreenLocation, WorldDirection)) {
-		UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *WorldDirection.ToString());
+		// Line-trace along that look direction
+		return GetLookVectorDirection(WorldDirection, OutHitLocation);
 	}
+	return false;
+}
 
-	// Line-trace along that look direction
+bool ATankPlayerController::GetLookVectorDirection(FVector LookDirection, FVector &OutHitLocation) const {
+	FHitResult HitResult;
+	FVector StartLine = PlayerCameraManager->GetCameraLocation();
+	if (GetWorld()->LineTraceSingleByChannel(
+		HitResult, 
+		StartLine,
+		StartLine + LookDirection * LineTraceRange,
+		ECC_Visibility)
+		) {
+		OutHitLocation = HitResult.Location;
+		DrawDebugLine(GetWorld(), TankPawn->GetActorLocation(), OutHitLocation, FColor(255, 0, 0), false, 0.f, 0, 10.f);
+		return true;
+	}
+	OutHitLocation = FVector(0);
 	return false;
 }
 
