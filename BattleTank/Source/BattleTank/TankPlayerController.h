@@ -23,6 +23,12 @@ protected:
 private:
 	ATank* TankPawn = nullptr;
 
+	UPROPERTY(EditAnywhere)
+	float CrossHairXLocation = 1.0/2.0;
+
+	UPROPERTY(EditAnywhere)
+	float CrossHairYLocation = 1.0/3.0;
+
 	ATank * GetControlledTank();
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation(FVector &OutHitLocation) const;
