@@ -31,11 +31,9 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	FVector HitLocation;
 	
 	if (GetSightRayHitLocation(HitLocation)) {
-		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitLocation.ToString());
+		TankPawn->AimAt(HitLocation);
 	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("No Hit"));
-	}
+	
 
 }
 

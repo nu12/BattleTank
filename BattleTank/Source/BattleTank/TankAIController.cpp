@@ -24,6 +24,14 @@ void ATankAIController::BeginPlay() {
 
 }
 
+void ATankAIController::Tick(float Delta){
+	Super::Tick(Delta);
+	if (!TankPawn || !PlayerTank) { return; }
+
+	FVector HitLocation = PlayerTank->GetActorLocation();
+	TankPawn->AimAt(HitLocation);
+}
+
 ATank * ATankAIController::GetControlledTank()
 {
 	return Cast<ATank>(GetPawn());

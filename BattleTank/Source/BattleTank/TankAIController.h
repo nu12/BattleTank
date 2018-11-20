@@ -17,6 +17,7 @@ class BATTLETANK_API ATankAIController : public AAIController
 	
 protected:
 	void BeginPlay() override;
+	void Tick(float Delta) override;
 
 private:
 	ATank * TankPawn = nullptr;
