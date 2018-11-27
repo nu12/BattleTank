@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,6 +38,8 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	if (!Barrel) { return; }
+
+	FColor color = FColor(255, 0, 0);
 	
 	FVector OutLaunchVelocity = FVector(0.f);
 	if (UGameplayStatics::SuggestProjectileVelocity(
@@ -48,7 +51,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	)) {
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
+		color = FColor(0, 255, 0);
 	}
+
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), HitLocation, color, false, 0.f, 0, 10.f);
 
 	
 }
