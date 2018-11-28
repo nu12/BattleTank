@@ -55,10 +55,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 		color = FColor(0, 255, 0);
-		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), GetWorld()->GetTimeSeconds())
+		//UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), GetWorld()->GetTimeSeconds())
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution not found"), GetWorld()->GetTimeSeconds())
+		//UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution not found"), GetWorld()->GetTimeSeconds())
 	}
 
 
@@ -68,9 +68,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimRotator = AimDirection.Rotation();
-	FRotator DeltaAimRotator = BarrelRotator - AimRotator;
+	FRotator DeltaAimRotator = AimRotator - BarrelRotator;
+	UE_LOG(LogTemp, Warning, TEXT("%f | %f | %f"), BarrelRotator.Pitch, AimRotator.Pitch, DeltaAimRotator.Pitch)
 
-	Barrel->Elevate(5);
+	Barrel->Elevate(DeltaAimRotator.Pitch);
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
