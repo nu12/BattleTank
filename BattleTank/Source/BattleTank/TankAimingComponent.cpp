@@ -57,13 +57,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	)) {
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards(AimDirection);
 		color = FColor(0, 255, 0); // DebugLine
 	}
-	else {
-		AimDirection = GetOwner()->GetActorForwardVector();
-	}
 
-	MoveBarrelTowards(AimDirection);
 	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), HitLocation, color, false, 0.f, 0, 10.f); // DebugLine
 }
 
