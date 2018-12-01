@@ -2,6 +2,8 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
+#include "Engine/World.h" // Debug
 #include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -37,10 +39,11 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
-	if (!Barrel) { return; }
+	if (!Barrel || !Turret) { return; }
 
 	FColor color = FColor(255, 0, 0);
 	FVector OutLaunchVelocity = FVector(0.f);
+	FVector AimDirection = FVector(0.f);
 	if (UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OutLaunchVelocity,
@@ -52,30 +55,48 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 		0.f,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	)) {
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(AimDirection);
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		color = FColor(0, 255, 0);
 		//UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution found"), GetWorld()->GetTimeSeconds())
 	}
 	else {
+		AimDirection = GetOwner()->GetActorForwardVector();
 		//UE_LOG(LogTemp, Warning, TEXT("%f: Aim solution not found"), GetWorld()->GetTimeSeconds())
 	}
 
-
+	MoveBarrelTowards(AimDirection);
 	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), HitLocation, color, false, 0.f, 0, 10.f);
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
+	FRotator TurretRotator = Turret->GetForwardVector().Rotation();
 	FRotator AimRotator = AimDirection.Rotation();
-	FRotator DeltaAimRotator = AimRotator - BarrelRotator;
-	UE_LOG(LogTemp, Warning, TEXT("%f | %f | %f"), BarrelRotator.Pitch, AimRotator.Pitch, DeltaAimRotator.Pitch)
+	FRotator DeltaBarrelRotator = AimRotator - BarrelRotator;
+	FRotator DeltaTurretRotator = AimRotator - TurretRotator;
+	float DeltaTurretRotatorYaw = DeltaTurretRotator.Yaw;
 
-	Barrel->Elevate(DeltaAimRotator.Pitch);
+	//TODO: Delete log
+	if (GetOwner()->GetName() == GetWorld()->GetFirstPlayerController()->GetPawn()->GetName()) {
+		UE_LOG(LogTemp, Warning, TEXT("%f"), DeltaTurretRotator.Yaw)
+	}
+
+	// Prevent Turret Rotation going to the longest path
+	if (FMath::Abs(DeltaTurretRotatorYaw) > 180) {
+		DeltaTurretRotatorYaw *= -1;
+	}
+	
+	Barrel->Elevate(DeltaBarrelRotator.Pitch);
+	Turret->Rotate(DeltaTurretRotatorYaw);
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
+{
+	Turret = TurretToSet;
 }
 
