@@ -21,13 +21,14 @@ void ATank::AimAt(FVector HitLocation)
 }
 
 void ATank::Fire(){
-	if (!Barrel) { return; }
-	UE_LOG(LogTemp, Warning, TEXT("Tank Fire!"))
-	GetWorld()->SpawnActor<AProjectile>(
+	if (!Barrel) { return; }	
+	AProjectile * Projectile = GetWorld()->SpawnActor<AProjectile>(
 		ProjectileBlueprint, 
 		Barrel->GetSocketLocation(FName("Projectile")), 
 		Barrel->GetSocketRotation(FName("Projectile"))
 		);
+
+	Projectile->LaunchProjectile(LaunchSpeed);
 }
 
 void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
