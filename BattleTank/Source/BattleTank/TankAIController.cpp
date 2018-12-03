@@ -1,43 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAIController.h"
+#include "Tank.h"
 #include "Engine/World.h"
 
 void ATankAIController::BeginPlay() {
 
 	Super::BeginPlay();
-	TankPawn = GetControlledTank();
-	PlayerTank = GetPlayerTank();
-	if (TankPawn) {
-		UE_LOG(LogTemp, Warning, TEXT("TankAIController found Pawn: %s"), *(TankPawn->GetName()));
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("No Pawn found for TankAIController"));
-	}
-
-	if (PlayerTank) {
-		UE_LOG(LogTemp, Warning, TEXT("TankAIController found PlayerTank: %s"), *(PlayerTank->GetName()));
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("PlayerTank not found"));
-	}
-
+	ControlledTank = Cast<ATank>(GetPawn());
+	PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
 }
 
 void ATankAIController::Tick(float Delta){
 	Super::Tick(Delta);
-	if (!TankPawn || !PlayerTank) { return; }
+	if (!ControlledTank || !PlayerTank) { return; }
 
 	FVector HitLocation = PlayerTank->GetActorLocation();
-	TankPawn->AimAt(HitLocation);
-}
-
-ATank * ATankAIController::GetControlledTank()
-{
-	return Cast<ATank>(GetPawn());
-}
-
-ATank * ATankAIController::GetPlayerTank()
-{
-	return Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	ControlledTank->AimAt(HitLocation);
+	ControlledTank->Fire();
 }
