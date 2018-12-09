@@ -19,6 +19,9 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	ATank * GetControlledTank();
 	
 private:
 	ATank* TankPawn = nullptr;
@@ -32,7 +35,6 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float LineTraceRange = 1000000;
 
-	ATank * GetControlledTank();
 	void AimTowardsCrosshair();
 	bool GetSightRayHitLocation(FVector &OutHitLocation) const;
 
