@@ -19,5 +19,5 @@ void ATankAIController::Tick(float Delta){
 	ControlledTank->AimAt(HitLocation);
 	ControlledTank->Fire();
 
-	MoveToActor(PlayerTank, 3000); // TODO create AcceptanceRadius variable 
+	MoveToActor(PlayerTank, ControlledTank->AcceptanceRadius);
 }
