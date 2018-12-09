@@ -42,9 +42,8 @@ public:
 
 	void MoveBarrelTowards(FVector AimDirection);
 
-	void SetBarrelReference(UTankBarrel * BarrelToSet);
-	void SetTurretReference(UTankTurret * TurretToSet);
-	
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	bool Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
 
 private:
 

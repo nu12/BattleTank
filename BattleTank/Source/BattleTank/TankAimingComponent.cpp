@@ -81,13 +81,11 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){
 	Turret->Rotate(DeltaTurretRotatorYaw);
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
+bool UTankAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
 {
+	if (!BarrelToSet || !TurretToSet) { return false; }
 	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
-{
 	Turret = TurretToSet;
+	return true;
 }
 
