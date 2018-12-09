@@ -24,6 +24,12 @@ void UTankMovementComponent::IntendMoveRight(float Throw) {
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool bForceMaxSpeed) {
-	UE_LOG(LogTemp, Warning, TEXT("RequestDirectMove to: %s"), *MoveVelocity.ToString())
+	FVector AIForwardIntention = MoveVelocity.GetSafeNormal();
+	FVector ActualForwardDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
 
+	float ForwardThrow = FVector::DotProduct(AIForwardIntention, ActualForwardDirection);
+	IntendMoveForward(ForwardThrow);
+
+	float RightThrow = FVector::CrossProduct(AIForwardIntention, ActualForwardDirection).Z;
+	IntendMoveRight(RightThrow);
 }
