@@ -26,7 +26,7 @@ ATank * ATankPlayerController::GetControlledTank() {
 }
 
 void ATankPlayerController::AimTowardsCrosshair() {
-	if (!TankPawn) { return; }
+	if (!ensure(TankPawn)) { return; }
 
 	FVector HitLocation;
 	
@@ -61,7 +61,6 @@ bool ATankPlayerController::GetLookVectorDirection(FVector LookDirection, FVecto
 		ECC_Visibility)
 		) {
 		OutHitLocation = HitResult.Location;
-		//DrawDebugLine(GetWorld(), TankPawn->GetActorLocation(), OutHitLocation, FColor(255, 0, 0), false, 0.f, 0, 10.f);
 		return true;
 	}
 	OutHitLocation = FVector(0);

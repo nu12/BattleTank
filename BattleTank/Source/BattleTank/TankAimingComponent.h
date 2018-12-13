@@ -43,7 +43,7 @@ public:
 	void MoveBarrelTowards(FVector AimDirection);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	bool Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
+	void Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
 
 private:
 

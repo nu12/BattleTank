@@ -13,7 +13,7 @@ void ATankAIController::BeginPlay() {
 
 void ATankAIController::Tick(float Delta){
 	Super::Tick(Delta);
-	if (!ControlledTank || !PlayerTank) { return; }
+	if (!ensure(ControlledTank && PlayerTank)) { return; }
 
 	FVector HitLocation = PlayerTank->GetActorLocation();
 	ControlledTank->AimAt(HitLocation);

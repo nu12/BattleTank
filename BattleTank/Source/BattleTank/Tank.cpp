@@ -17,15 +17,12 @@ ATank::ATank()
 
 void ATank::AimAt(FVector HitLocation)
 {
-	if (!TankAimingComponent) { return; }
+	if (!ensure(TankAimingComponent)) { return; }
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
 void ATank::Fire(){
-	if (!ProjectileBlueprint) {
-		UE_LOG(LogTemp, Error, TEXT("Set ProjectileBlueprint"))
-		return;
-	}
+	if (!ensure(ProjectileBlueprint)) {	return;	}
 
 	bool isReloaded = GetWorld()->TimeSeconds - LastFireTime > ReloadTimeInSeconds;
 	if (Barrel && isReloaded) {
