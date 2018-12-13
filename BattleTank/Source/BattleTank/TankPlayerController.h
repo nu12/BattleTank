@@ -22,6 +22,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	ATank * GetControlledTank();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Setup)
+	void FoundAimingComponent(UTankAimingComponent * AimingComponent);
 	
 private:
 	ATank* TankPawn = nullptr;

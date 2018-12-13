@@ -2,18 +2,17 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "TankAimingComponent.h"
 #include "DrawDebugHelpers.h"
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
 	TankPawn = GetControlledTank();
 
-	if (TankPawn) {
-		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController found Pawn: %s"), *(TankPawn->GetName()));
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("No Pawn found for TankPlayerController"));
-	}
+	if (!ensure(TankPawn)) { return; }
+	UTankAimingComponent * TankAimingComponent = TankPawn->FindComponentByClass< UTankAimingComponent>();
+	if (!ensure(TankAimingComponent)) { return; }
+	else { FoundAimingComponent(TankAimingComponent); }
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds) {
