@@ -2,6 +2,7 @@
 
 #include "TankAIController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 #include "Engine/World.h"
 
 void ATankAIController::BeginPlay() {
@@ -16,8 +17,8 @@ void ATankAIController::Tick(float Delta){
 	if (!ensure(ControlledTank && PlayerTank)) { return; }
 
 	FVector HitLocation = PlayerTank->GetActorLocation();
-	ControlledTank->AimAt(HitLocation);
-	ControlledTank->Fire();
+	ControlledTank->GetTankAimingComponent()->AimAt(HitLocation);
+	ControlledTank->GetTankAimingComponent()->Fire();
 
 	MoveToActor(PlayerTank, ControlledTank->AcceptanceRadius);
 }

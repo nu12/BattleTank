@@ -3,46 +3,29 @@
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 #include "Engine/World.h" // Debug
 #include "DrawDebugHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
-// Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
 }
-
-
-// Called when the game starts
 void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
-
-
-// Called every frame
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
+void UTankAimingComponent::AimAt(FVector HitLocation) {
 	if (!ensure(Barrel && Turret)) { return; }
 
-	//TODO delete DebugLine
-	FColor color = FColor(255, 0, 0); // DebugLine
 	FVector OutLaunchVelocity = FVector(0.f);
 	FVector AimDirection = FVector(0.f);
 	if (UGameplayStatics::SuggestProjectileVelocity(
@@ -58,10 +41,25 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	)) {
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
-		color = FColor(0, 255, 0); // DebugLine
 	}
 
-	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), HitLocation, color, false, 0.f, 0, 10.f); // DebugLine
+	//TODO remove debug line
+	DrawDebugLine(GetWorld(), GetOwner()->GetActorLocation(), HitLocation, FColor(255,0,0), false, 0.f, 0, 10.f); // DebugLine
+}
+
+void UTankAimingComponent::Fire() {
+	bool isReloaded = GetWorld()->TimeSeconds - LastFireTime > ReloadTimeInSeconds;
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
+	if (isReloaded) {
+		AProjectile * Projectile = GetWorld()->SpawnActor<AProjectile>(
+			ProjectileBlueprint,
+			Barrel->GetSocketLocation(FName("Projectile")),
+			Barrel->GetSocketRotation(FName("Projectile"))
+			);
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = GetWorld()->TimeSeconds;
+	}
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){

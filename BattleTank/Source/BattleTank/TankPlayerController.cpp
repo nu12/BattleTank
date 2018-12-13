@@ -30,7 +30,7 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	FVector HitLocation;
 	
 	if (GetSightRayHitLocation(HitLocation)) {
-		TankPawn->AimAt(HitLocation);
+		TankPawn->GetTankAimingComponent()->AimAt(HitLocation);
 	}
 	
 

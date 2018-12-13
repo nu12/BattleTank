@@ -7,10 +7,7 @@
 #include "Tank.generated.h"
 
  // Forward Declaration
-class UTankBarrel;
-class AProjectile;
 class UTankAimingComponent;
-class UTankMovementComponent;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -20,17 +17,11 @@ class BATTLETANK_API ATank : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ATank();
-
-	void AimAt(FVector HitLocation);
 	
-	UFUNCTION(BlueprintCallable)
-	void Fire();
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel * BarrelToSet);
-
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	float AcceptanceRadius = 3000.f;
+
+	UTankAimingComponent * GetTankAimingComponent();
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,18 +33,4 @@ protected:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 5000.f;
-
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
-
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ReloadTimeInSeconds = 3.f;
-
-	UTankBarrel * Barrel = nullptr; // Local barrel reference
-	
-	float LastFireTime = 0.f;
-	
 };
