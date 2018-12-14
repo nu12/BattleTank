@@ -2,6 +2,7 @@
 
 #include "TankAIController.h"
 #include "TankAimingComponent.h"
+#include "TankMovementComponent.h"
 #include "Engine/World.h"
 
 void ATankAIController::BeginPlay() {
@@ -16,5 +17,5 @@ void ATankAIController::Tick(float Delta){
 	GetPawn()->FindComponentByClass< UTankAimingComponent>()->Fire();
 	
 	// TODO include AcceptanceRadius variable in MovementComponent
-	MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), 3000.f);
+	MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), GetPawn()->FindComponentByClass< UTankMovementComponent>()->AcceptanceRadius);
 }

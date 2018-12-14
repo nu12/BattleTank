@@ -28,7 +28,10 @@ public:
 
 	void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
 
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float AcceptanceRadius = 3000.f;
+
 private:
 	UTankTrack* LeftTrack = nullptr;
-	UTankTrack* RightTrack = nullptr;
+	UTankTrack* RightTrack = nullptr;	
 };
