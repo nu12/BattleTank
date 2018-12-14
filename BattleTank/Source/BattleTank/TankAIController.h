@@ -5,9 +5,6 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-//Forward declaration
-class ATank;
-
 /**
  * 
  */
@@ -19,9 +16,5 @@ class BATTLETANK_API ATankAIController : public AAIController
 protected:
 	void BeginPlay() override;
 	void Tick(float Delta) override;
-
-private:
-	ATank * ControlledTank = nullptr;
-	ATank * PlayerTank = nullptr; // This will be the target
 
 };

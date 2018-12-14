@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tank.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
@@ -20,15 +19,11 @@ protected:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	ATank * GetControlledTank();
-
 	UFUNCTION(BlueprintImplementableEvent, Category = Setup)
 	void FoundAimingComponent(UTankAimingComponent * AimingComponent);
 	
 private:
-	ATank* TankPawn = nullptr;
-
+	
 	UPROPERTY(EditDefaultsOnly)
 	float CrossHairXLocation = 1.0/2.0;
 
