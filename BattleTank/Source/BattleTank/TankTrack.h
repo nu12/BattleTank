@@ -19,5 +19,9 @@ public:
 	void SetThrottle(float Throttle);
 	
 	UPROPERTY(EditDefaultsOnly)
-	float MaxTrackDrivingForce = 400000.f;
+	float MaxTrackDrivingForce = 40000000.f;
+
+private:
+	UTankTrack();
+	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };
