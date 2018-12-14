@@ -21,10 +21,21 @@ void UTankAimingComponent::BeginPlay()
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (GetWorld()->TimeSeconds - LastFireTime < ReloadTimeInSeconds) {
+		FiringState = EFiringState::Reloading;
+		
+	}
+	else if (IsBarrelMoving()) {
+		FiringState = EFiringState::Aiming;
+	}
+	else {
+		FiringState = EFiringState::Locked;
+	}
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation) {
-	if (!ensure(Barrel && Turret)) { return; }
+	if (!ensure(Barrel)) { return; }
+	if (!ensure(Turret)) { return; }
 
 	FVector OutLaunchVelocity = FVector(0.f);
 	FVector AimDirection = FVector(0.f);
@@ -41,6 +52,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation) {
 	)) {
 		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
+		LastAimDirection = AimDirection;
 	}
 
 	//TODO remove debug line
@@ -48,9 +60,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation) {
 }
 
 void UTankAimingComponent::Fire() {
-	bool isReloaded = GetWorld()->TimeSeconds - LastFireTime > ReloadTimeInSeconds;
 	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
-	if (isReloaded) {
+	if (FiringState != EFiringState::Reloading) {
 		AProjectile * Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileBlueprint,
 			Barrel->GetSocketLocation(FName("Projectile")),
@@ -58,7 +69,7 @@ void UTankAimingComponent::Fire() {
 			);
 
 		Projectile->LaunchProjectile(LaunchSpeed);
-		LastFireTime = GetWorld()->TimeSeconds;
+		LastFireTime = GetWorld()->TimeSeconds;		
 	}
 }
 
@@ -77,6 +88,12 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){
 	
 	Barrel->Elevate(DeltaBarrelRotator.Pitch);
 	Turret->Rotate(DeltaTurretRotatorYaw);
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(Barrel)) { return false; }
+	return !LastAimDirection.Equals(Barrel->GetForwardVector());
 }
 
 void UTankAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)

@@ -50,6 +50,8 @@ private:
 
 	UTankBarrel *Barrel = nullptr;
 	UTankTurret *Turret = nullptr;
+	
+	FVector LastAimDirection;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 5000.f;
@@ -63,4 +65,5 @@ private:
 	float LastFireTime = 0.f;
 
 	void MoveBarrelTowards(FVector AimDirection);
+	bool IsBarrelMoving();
 };
