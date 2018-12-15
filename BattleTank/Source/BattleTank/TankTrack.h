@@ -22,6 +22,18 @@ public:
 	float MaxTrackDrivingForce = 40000000.f;
 
 private:
+	float CurrentThrottle = 0.f;
+
 	UTankTrack();
-	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void BeginPlay();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void DriveTrack();
+	void ApplySidewaysForce();
+
 };
+
+
+ 
