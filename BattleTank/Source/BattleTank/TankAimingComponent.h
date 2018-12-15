@@ -56,7 +56,7 @@ private:
 	FVector LastAimDirection;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 5000.f;
+	float LaunchSpeed = 6000.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
