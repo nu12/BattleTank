@@ -39,8 +39,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringState FiringState = EFiringState::Reloading;
 
-	UPROPERTY(BlueprintReadOnly, Category = Setup)
-	int AvailableAmmo = 3;
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	int32 AvailableAmmo = 3;
 public:	
 	void AimAt(FVector HitLocation);
 
@@ -50,7 +50,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
 
+	UFUNCTION(BlueprintCallable, Category = Firing)
 	EFiringState GetFiringState() const;
+
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	int32 GetAvailableAmmo() const;
 private:
 
 	UTankBarrel *Barrel = nullptr;
