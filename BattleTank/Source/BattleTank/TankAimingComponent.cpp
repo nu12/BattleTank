@@ -12,7 +12,7 @@
 
 UTankAimingComponent::UTankAimingComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 void UTankAimingComponent::BeginPlay()
 {
@@ -21,7 +21,7 @@ void UTankAimingComponent::BeginPlay()
 void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
 	if (AvailableAmmo <= 0) {
 		FiringState = EFiringState::OutOfAmmo;
 	}
@@ -63,8 +63,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation) {
 }
 
 void UTankAimingComponent::Fire() {
-	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }	
 	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming) {
+
 		AProjectile * Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileBlueprint,
 			Barrel->GetSocketLocation(FName("Projectile")),
@@ -97,7 +98,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection){
 bool UTankAimingComponent::IsBarrelMoving()
 {
 	if (!ensure(Barrel)) { return false; }
-	return !LastAimDirection.Equals(Barrel->GetForwardVector());
+	return !LastAimDirection.Equals(Barrel->GetForwardVector(), 0.01);
 }
 
 void UTankAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)

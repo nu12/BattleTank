@@ -33,15 +33,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringState FiringState = EFiringState::Reloading;
 
 	UPROPERTY(BlueprintReadOnly, Category = Setup)
 	int AvailableAmmo = 3;
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
@@ -51,7 +51,6 @@ public:
 	void Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
 
 	EFiringState GetFiringState() const;
-
 private:
 
 	UTankBarrel *Barrel = nullptr;

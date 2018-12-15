@@ -10,14 +10,17 @@ void ATankAIController::BeginPlay() {
 }
 
 void ATankAIController::Tick(float Delta){
-	Super::Tick(Delta);
-
+	Super::Tick(Delta);	
 	FVector HitLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	UTankAimingComponent * AimingComponent = GetPawn()->FindComponentByClass< UTankAimingComponent>();
-
 	AimingComponent->AimAt(HitLocation);
 	if (AimingComponent->GetFiringState() == EFiringState::Locked) {
 		AimingComponent->Fire();
 	}
-	MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), GetPawn()->FindComponentByClass< UTankMovementComponent>()->AcceptanceRadius);
+
+	UTankMovementComponent * MovementComponent = GetPawn()->FindComponentByClass< UTankMovementComponent>();
+	if (MovementComponent) {
+		MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), GetPawn()->FindComponentByClass< UTankMovementComponent>()->AcceptanceRadius);
+	}
+	
 }
