@@ -46,6 +46,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet);
 
+	EFiringState GetFiringState() const;
+
 private:
 
 	UTankBarrel *Barrel = nullptr;
