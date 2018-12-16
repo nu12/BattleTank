@@ -17,3 +17,12 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+float ATank::GetHealth()
+{
+	return (float)CurrentHealth / (float)StartingHealth;
+}
+float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser){
+	float Damage = FMath::Clamp<float>(DamageAmount, 0, CurrentHealth);
+	CurrentHealth -= Damage;
+	return Damage;
+}

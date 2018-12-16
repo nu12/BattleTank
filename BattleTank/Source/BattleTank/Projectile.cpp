@@ -3,7 +3,10 @@
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "Engine/StaticMesh.h"
+#include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -26,6 +29,9 @@ AProjectile::AProjectile()
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
 	ImpactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	ImpactBlast->bAutoActivate = false;
+
+	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	ExplosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 }
 
@@ -51,7 +57,27 @@ void AProjectile::LaunchProjectile(float Speed)
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
+
+	SetRootComponent(ImpactBlast);
 	CollisionMesh->SetVisibility(false);
 	CollisionMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CollisionMesh->DestroyComponent();
+	ExplosionForce->FireImpulse();
+
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		ProjectileDamage,
+		GetActorLocation(),
+		ExplosionForce->Radius, // for consistency
+		UDamageType::StaticClass(),
+		TArray<AActor*>()
+	);
+
+	FTimerHandle Time;
+	GetWorld()->GetTimerManager().SetTimer(Time, this, &AProjectile::OnTimerExpire, 10.f, false);
+}
+
+void AProjectile::OnTimerExpire(){
+	Destroy();
 }
 

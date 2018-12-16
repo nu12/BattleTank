@@ -16,9 +16,20 @@ public:
 	ATank();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintPure, Category = Health)
+	float GetHealth();
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual float TakeDamage(float DamageAmount,struct FDamageEvent const & DamageEvent,class AController * EventInstigator,AActor * DamageCauser) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float StartingHealth = 100.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = Health)
+	float CurrentHealth = StartingHealth;
 };
