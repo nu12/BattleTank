@@ -28,11 +28,17 @@ protected:
 	UStaticMeshComponent * CollisionMesh = nullptr;
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent * LaunchBlast = nullptr;
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent * ImpactBlast = nullptr;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void LaunchProjectile(float Speed);
+
+private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };
