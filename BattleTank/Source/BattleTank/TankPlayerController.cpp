@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
+#include "Tank.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
 #include "DrawDebugHelpers.h"
@@ -16,6 +17,21 @@ void ATankPlayerController::BeginPlay() {
 void ATankPlayerController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 	AimTowardsCrosshair();
+}
+
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn) {
+		ATank* PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	StartSpectatingOnly();
 }
 
 

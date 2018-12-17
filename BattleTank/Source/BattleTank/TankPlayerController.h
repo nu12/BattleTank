@@ -23,6 +23,10 @@ protected:
 	void FoundAimingComponent(UTankAimingComponent * AimingComponent);
 	
 private:
+
+	virtual void SetPawn(APawn * InPawn) override;
+	UFUNCTION()
+	void OnPossessedTankDeath();
 	
 	UPROPERTY(EditDefaultsOnly)
 	float CrossHairXLocation = 1.0/2.0;

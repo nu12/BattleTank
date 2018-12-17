@@ -24,5 +24,8 @@ float ATank::GetHealth()
 float ATank::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser){
 	float Damage = FMath::Clamp<float>(DamageAmount, 0, CurrentHealth);
 	CurrentHealth -= Damage;
+	if (CurrentHealth <= 0.f) {
+		OnDeath.Broadcast();
+	}
 	return Damage;
 }

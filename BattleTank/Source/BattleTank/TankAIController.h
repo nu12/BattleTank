@@ -17,4 +17,8 @@ protected:
 	void BeginPlay() override;
 	void Tick(float Delta) override;
 
+private:
+	virtual void SetPawn(APawn * InPawn) override;
+	UFUNCTION()
+	void OnPossessedTankDeath();
 };
